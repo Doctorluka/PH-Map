@@ -7,19 +7,13 @@ PH-Map: Multi-task cell type classification package for single-cell RNA sequenci
 ### Quick Install (Recommended)
 
 ```bash
-# 1. Create and activate phmap-env environment
-mamba create -n phmap-env python=3.11 -y
+# 1. Activate phmap-env environment
 mamba activate phmap-env
 
-# 2. Install the dependency package for phmap
-pip install uv
-uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-uv pip install torch_geometric -i https://mirrors.nju.edu.cn/pypi/web/simple
-uv pip install scanpy==1.11.5 pandas==1.5.3 numpy==1.26.4 -i https://mirrors.nju.edu.cn/pypi/web/simple
-uv pip install scikit-learn matplotlib seaborn scipy pytest black flake8 -i https://mirrors.nju.edu.cn/pypi/web/simple
+# 2. Navigate to phmap directory
+cd /home/data/fhz/project/phmap_package/phmap
 
-# 3. Navigate to phmap directory
-git clone https://github.com/Doctorluka/PH-Map.git
+# 3. Install in development mode (recommended)
 pip install -e .
 ```
 
@@ -28,7 +22,6 @@ pip install -e .
 ### Dependencies
 
 The package automatically installs the following dependencies when you run `pip install`:
-
 - `torch>=2.0.0` - PyTorch deep learning framework
 - `scanpy>=1.9.0` - Single-cell analysis
 - `pandas>=1.5.0` - Data manipulation
@@ -42,10 +35,6 @@ The package automatically installs the following dependencies when you run `pip 
 **Python version:** Requires Python >= 3.11
 
 For detailed installation instructions and troubleshooting, see [INSTALLATION.md](INSTALLATION.md).
-
-## Test data and models
-
-The full machine learning model, trained on the comprehensive single-cell RNA-sequencing (scRNA-seq) dataset for pulmonary hypertension, is available in FigShare (10.6084/m9.figshare.30666551) and Zenodo (10.5281/zenodo.17661644). The test datasets utilized in the accompanying analysis notebooks are also deposited at FigShare (10.6084/m9.figshare.30666551).
 
 ## Quick Start
 
@@ -121,12 +110,14 @@ print(models)
 
 ## Documentation
 
+See `docs/` directory for detailed documentation:
 - [README](docs/README.md) - Overview
+- [Tutorial](docs/Tutorial.md) - Complete usage guide
+- [API Reference](docs/API_Reference.md) - Detailed API documentation
+- [Plotting Guide](docs/Plotting_Guide.md) - Visualization functions
 
 See `notebooks/` directory for examples:
-
 - [Quick Start](notebooks/quick_start.ipynb) - Quick start of reference mapping using pretrain model on test data
-- [Example for real dataset](notebooks/example_for_real_dataset.ipynb) - Explore GSE228643 datasets
 
 ## Features
 
