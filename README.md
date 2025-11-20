@@ -18,11 +18,8 @@ uv pip install torch_geometric -i https://mirrors.nju.edu.cn/pypi/web/simple
 uv pip install scanpy==1.11.5 pandas==1.5.3 numpy==1.26.4 -i https://mirrors.nju.edu.cn/pypi/web/simple
 uv pip install scikit-learn matplotlib seaborn scipy pytest black flake8 -i https://mirrors.nju.edu.cn/pypi/web/simple
 
-# 2. Navigate to phmap directory
+# 3. Navigate to phmap directory
 git clone https://github.com/Doctorluka/PH-Map.git
-pip install -e .
-
-# 3. Install in development mode (recommended)
 pip install -e .
 ```
 
