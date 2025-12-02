@@ -19,6 +19,7 @@ version.py
 ./models/full_model/cell_type_classifier_full_metadata.pkl
 ./pl/__init__.py
 ./pl/plotting.py
+./pl/sankey.py
 ./utils/__init__.py
 core/__init__.py
 core/classifier.py
@@ -34,4 +35,5 @@ phmap.egg-info/requires.txt
 phmap.egg-info/top_level.txt
 pl/__init__.py
 pl/plotting.py
+pl/sankey.py
 utils/__init__.py

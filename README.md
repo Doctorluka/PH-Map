@@ -50,7 +50,7 @@ adata = sc.read_h5ad('query_data.h5ad')
 # Predict using default model (automatically loads full_model)
 result = phmap.predict(adata, return_probabilities=True)
 
-# Visualize
+# Visualize prediction probabilities
 phmap.pl.plot_probability_bar(result, label_columns=['anno_lv4'])
 
 # Add predictions to AnnData
@@ -94,9 +94,38 @@ model = phmap.build_model(
 # Save model
 model.save('models/my_model.pth')
 
-# Predict
+# Predict on query data
 adata_query = sc.read_h5ad("path/to/h5ad/file")
 result = phmap.predict(model, adata_query, return_probabilities=True)
+```
+
+### Optimized color palettes and Sankey visualization
+
+```python
+import phmap
+import matplotlib.pyplot as plt
+
+# Assume predictions have been added to adata.obs
+# e.g. columns like 'anno_lv4_ref' and 'anno_lv4_pred'
+
+# Generate consistent categorical color palettes for multiple obs columns
+palette = phmap.pl.optim_palette(
+    adata=adata,
+    obs_columns=['anno_lv4_ref', 'anno_lv4_pred'],  # categorical obs columns
+    color_scheme="Paired",  # default, similar to RColorBrewer::Paired
+)
+
+# Example: visualize mapping between reference and predicted labels with Sankey
+x = adata.obs['anno_lv4_ref']
+y = adata.obs['anno_lv4_pred']
+
+fig = phmap.pl.sankey(
+    x=x,
+    y=y,
+    colorside="right",  # or "left"
+    title="Cell type mapping (anno_lv4)"
+)
+plt.show()
 ```
 
 ## Available Models
@@ -126,6 +155,7 @@ See `notebooks/` directory for examples:
 - **Automatic Gene Alignment**: Handles gene name matching automatically
 - **Pre-trained Models**: Includes full_model trained on complete dataset
 - **Rich Visualizations**: Multiple plotting functions for result analysis
+- **Optimized Palettes & Sankey**: `phmap.pl.optim_palette` for categorical color schemes and `phmap.pl.sankey` for flow visualization between annotations
 - **GPU Support**: Automatic CUDA detection and usage
 
 ## Requirements

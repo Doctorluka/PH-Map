@@ -8,6 +8,7 @@ probability heatmaps, bar charts, and cell type counts.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import seaborn as sns
 from typing import List, Optional, Dict, Union
 import scanpy as sc
@@ -112,6 +113,113 @@ def plot_probability_heatmap(
     # Return axes (single or list)
     return axes[0] if n_levels == 1 else axes
 
+
+def optim_palette(
+    adata: sc.AnnData,
+    obs_columns: List[str],
+    color_scheme: str = "Paired",
+) -> Union[Dict[str, str], Dict[str, Dict[str, str]]]:
+    """
+    Generate optimized categorical color palettes based on obs columns.
+
+    This function is inspired by the R pattern:
+        library(RColorBrewer)
+        getPalette = colorRampPalette(brewer.pal(12, "Paired"))
+        mycolors <- getPalette(n)
+
+    It collects all categories across the specified obs columns, assigns
+    a unique color to each category using a matplotlib qualitative colormap.
+
+    The same category label appearing in multiple obs columns will receive
+    the same color.
+
+    Args:
+        adata: AnnData object with categorical columns in .obs.
+        obs_columns: List of obs column names (string or categorical type).
+        color_scheme: Name of qualitative color scheme.
+            Default: "Paired".
+            Supported (built-in): "Paired", "Set3", "Dark2", "tab20", "Accent".
+            Any valid matplotlib colormap name is also accepted.
+
+    Returns:
+        If a single obs_column is provided:
+            Dict[str, str]: {category: "#RRGGBB", ...}
+        
+        If multiple obs_columns are provided:
+            Dict[str, Dict[str, str]]: {obs_col: {category: "#RRGGBB", ...}, ...}
+    """
+    if isinstance(obs_columns, str):
+        obs_columns = [obs_columns]
+
+    # Supported qualitative schemes (matplotlib names)
+    qualitative_schemes = {
+        "Paired": "Paired",   # default, similar to RColorBrewer::Paired
+        "Set3": "Set3",
+        "Dark2": "Dark2",
+        "tab20": "tab20",
+        "Accent": "Accent",
+    }
+
+    cmap_name = qualitative_schemes.get(color_scheme, color_scheme)
+    try:
+        cmap = plt.get_cmap(cmap_name)
+    except ValueError as e:
+        raise ValueError(
+            f"Unknown color_scheme '{color_scheme}'. "
+            f"Supported schemes: {list(qualitative_schemes.keys())} "
+            f"or any valid matplotlib colormap name."
+        ) from e
+
+    # Collect categories for each column and global unique category list
+    col_to_categories: Dict[str, List[str]] = {}
+    all_categories: List[str] = []
+
+    for col in obs_columns:
+        if col not in adata.obs.columns:
+            raise KeyError(f"Column '{col}' not found in adata.obs")
+
+        series = adata.obs[col]
+        if not pd.api.types.is_categorical_dtype(series):
+            series = series.astype("category")
+
+        cats = list(series.cat.categories)
+        col_to_categories[col] = cats
+        all_categories.extend(cats)
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique_categories: List[str] = []
+    for cat in all_categories:
+        if cat not in seen:
+            seen.add(cat)
+            unique_categories.append(cat)
+
+    n = len(unique_categories)
+    if n == 0:
+        if len(obs_columns) == 1:
+            return {}
+        return {col: {} for col in obs_columns}
+
+    if n == 1:
+        positions = [0.5]
+    else:
+        positions = np.linspace(0.0, 1.0, n)
+
+    colors = [mcolors.to_hex(cmap(pos)) for pos in positions]
+    category_to_color = {
+        cat: color for cat, color in zip(unique_categories, colors)
+    }
+
+    # Build nested mapping per obs column
+    result: Dict[str, Dict[str, str]] = {}
+    for col, cats in col_to_categories.items():
+        result[col] = {cat: category_to_color[cat] for cat in cats}
+
+    # If only one obs_column, return the inner dict directly for convenience
+    if len(obs_columns) == 1:
+        return result[obs_columns[0]]
+    
+    return result
 
 def plot_probability_bar(
     result: 'PredictionResult',
