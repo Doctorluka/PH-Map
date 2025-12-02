@@ -139,12 +139,6 @@ print(models)
 
 ## Documentation
 
-See `docs/` directory for detailed documentation:
-- [README](docs/README.md) - Overview
-- [Tutorial](docs/Tutorial.md) - Complete usage guide
-- [API Reference](docs/API_Reference.md) - Detailed API documentation
-- [Plotting Guide](docs/Plotting_Guide.md) - Visualization functions
-
 See `notebooks/` directory for examples:
 - [Quick Start](notebooks/quick_start.ipynb) - Quick start of reference mapping using pretrain model on test data
 
