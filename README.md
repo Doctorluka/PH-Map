@@ -141,6 +141,8 @@ print(models)
 
 See `notebooks/` directory for examples:
 - [Quick Start](notebooks/quick_start.ipynb) - Quick start of reference mapping using pretrain model on test data
+- [Example 1](notebooks/reference_mapping_example1.ipynb) - Use pretrained model of Pulmonary hypertension for external example (GSE228643, a datasets contained scRNA-seq data of pulmonary arterial)
+- [Example 2](notebooks/reference_mapping_example2.ipynb) - Use pretrained model of Pulmonary hypertension for external example (GSE169471, a datasets contained scRNA-seq data of lung tissue)
 
 ## Features
 
